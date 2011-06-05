@@ -1,0 +1,6 @@
+*.o
+equipotential
+Makefile
+moc_*
+ui_*
+*.pro.user

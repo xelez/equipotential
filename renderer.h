@@ -17,7 +17,7 @@ class Renderer
 public:
     Renderer();
 
-    void render(QGraphicsRectItem *area);
+    void render(QGraphicsItem *area);
     QImage img;
 private:
     Vector2 data;

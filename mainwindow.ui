@@ -117,6 +117,16 @@
          </widget>
         </item>
         <item>
+         <widget class="QCheckBox" name="cbChargesVisible">
+          <property name="text">
+           <string>Показывать заряды</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="pbAddCharge">
           <property name="text">
            <string>Добавить заряд</string>
@@ -179,8 +189,8 @@
    <slot>addCharge()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>156</x>
-     <y>225</y>
+     <x>188</x>
+     <y>252</y>
     </hint>
     <hint type="destinationlabel">
      <x>1</x>
@@ -195,8 +205,8 @@
    <slot>removeAll()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>118</x>
-     <y>244</y>
+     <x>150</x>
+     <y>284</y>
     </hint>
     <hint type="destinationlabel">
      <x>4</x>
@@ -284,6 +294,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>cbChargesVisible</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setChargesVisible(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>144</x>
+     <y>210</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>addCharge()</slot>
@@ -293,5 +319,6 @@
   <slot>changeChargeY(double)</slot>
   <slot>changeChargeQ(double)</slot>
   <slot>renderP()</slot>
+  <slot>setChargesVisible(int)</slot>
  </slots>
 </ui>

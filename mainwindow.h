@@ -22,8 +22,7 @@ protected:
 private:
     Ui::MainWindow *ui;
     QGraphicsScene scene;
-    QGraphicsRectItem *chargeArea;
-    QGraphicsPixmapItem *pixmap;
+    QGraphicsPixmapItem *chargeArea;
     PointCharge *selectedCharge;
 
     Renderer renderer;
@@ -37,6 +36,7 @@ public slots:
     void changeChargeX(double value);
     void changeChargeY(double value);
     void changeChargeQ(double value);
+    void setChargesVisible(int value);
     void renderP();
 };
 

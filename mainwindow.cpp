@@ -10,8 +10,18 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    chargeArea = scene.addRect(0, 0, 400, 400, QPen(Qt::black), QBrush(Qt::lightGray));
-    pixmap = new QGraphicsPixmapItem(chargeArea, &scene);
+    QPixmap background(400, 400);
+    background.fill(Qt::lightGray);
+    QPainter painter;
+    painter.begin(&background);
+    painter.setPen(QPen(Qt::black));
+    painter.setBrush(QBrush(Qt::lightGray));
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.drawRect(0, 0, 400, 400);
+    painter.end();
+
+    chargeArea = scene.addPixmap(background);
+
     scene.setSceneRect(0,0, 400, 400);
     ui->graphicsView->setScene(&scene);
 
@@ -89,10 +99,17 @@ void MainWindow::changeChargeQ(double value)
     selectedCharge->charge = value;
 }
 
+void MainWindow::setChargesVisible(int value)
+{
+    ui->pbAddCharge->setEnabled(value);
+    foreach(QGraphicsItem *charge, chargeArea->childItems())
+        charge->setVisible(value);
+}
+
 void MainWindow::renderP()
 {
     renderer.render(chargeArea);
-    pixmap->setPixmap(QPixmap::fromImage(renderer.img));
+    chargeArea->setPixmap(QPixmap::fromImage(renderer.img));
 }
 
 

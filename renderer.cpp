@@ -18,37 +18,42 @@ void Renderer::render(QGraphicsItem *area)
     for (Vector2::iterator v = data.begin(); v != data.end(); ++v)
         v->resize(rect.height());
 
-    double minP=1e20, maxP=-1e20;
+    double minVal=1e20, maxVal=-1e20;
 
     for (int y=0; y<rect.height(); ++y) {
         for (int x=0; x<rect.width(); ++x) {
-            double & potential = data[x][y];
+            double & value = data[x][y];
+            QVector2D tmpval(0,0);
 
             foreach (const QGraphicsItem * tmp, area->childItems()) {
                 const PointCharge * p = (PointCharge *) tmp;
-                const double r = (QVector2D(p->pos())-QVector2D(x, y)).length();
-                if (qAbs(r) > EPS)
-                    potential += qK * p->charge / r;
+
+                const QVector2D r = QVector2D(p->pos()) - QVector2D(x, y);
+                if (qAbs(r.length()) > EPS)
+                    //value += qK * p->charge / r.length(); - потенциал
+
+                    tmpval += (qK * p->charge / r.lengthSquared()) * r.normalized(); //напряженность
                 else {
-                    potential = 0;
+                    value = 0;
                     break;
                 }
             }
+            value = tmpval.length(); //напряженность
 
-            minP = qMin(minP, potential);
-            maxP = qMax(maxP, potential);
+            minVal = qMin(minVal, value);
+            maxVal = qMax(maxVal, value);
         }
     }
 
-    const double diff = maxP - minP;
+    const double diff = maxVal - minVal;
     QColor color;
     color.setRgb(0, 24, 241);
     for (int y=0; y<rect.height(); ++y) {
         for (int x=0; x<rect.width(); ++x) {
-            //qDebug("%.4lf", (255*(data[x][y]-minP)/diff));
-            if ( data[x][y]-minP < 0) qDebug("%d %d %.5lf %.5lf", x, y, data[x][y], minP);
-            //color.setRed( (int)(256*800*(data[x][y]-minP)/diff) % 256 );
-            color = QColor::fromHsv((int)(180+360*20*(data[x][y]-minP)/diff) % 360, 200, 200);
+            //qDebug("%.4lf", (255*(data[x][y]-minVal)/diff));
+            if ( data[x][y]-minVal < 0) qDebug("%d %d %.5lf %.5lf", x, y, data[x][y], minVal);
+            color.setRed( (int)(256*80000*(data[x][y]-minVal)/diff) % 256 );
+            //color = QColor::fromHsv((int)(180+360*20*(data[x][y]-minVal)/diff) % 360, 200, 200);
             img.setPixel(x,y, color.rgb());
         }
     }

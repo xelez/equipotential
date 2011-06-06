@@ -14,9 +14,9 @@ PointCharge::PointCharge(MainWindow *w) :
     setFlag(ItemIsSelectable);
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);
-    setZValue(-1);
+    setZValue(1.0);
 
-    charge = 0;
+    charge = 1.0;
 }
 
 QRectF PointCharge::boundingRect() const

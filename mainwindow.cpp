@@ -57,6 +57,8 @@ void MainWindow::fieldSizeChanged()
     const int w = ui->sbFieldWidth->value();
     const int h = ui->sbFieldHeight->value();
 
+    ui->sbX->setMaximum(w);
+    ui->sbY->setMaximum(h);
     chargeArea->setPixmap(defaultBackground(w,h));
     scene.setSceneRect(0,0, w, h);    
 }

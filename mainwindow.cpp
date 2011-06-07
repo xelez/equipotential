@@ -126,10 +126,15 @@ void MainWindow::setChargesVisible(int value)
 
 void MainWindow::renderP()
 {
-    renderer.render(chargeArea);
+    renderer.render(chargeArea, Renderer::calcPotential);
     chargeArea->setPixmap(QPixmap::fromImage(renderer.img));
 }
 
+void MainWindow::renderE()
+{
+    renderer.render(chargeArea, Renderer::calcElectricField);
+    chargeArea->setPixmap(QPixmap::fromImage(renderer.img));
+}
 
 
 

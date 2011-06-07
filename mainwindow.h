@@ -40,6 +40,7 @@ public slots:
     void setChargesVisible(int value);
     void fieldSizeChanged();
     void renderP();
+    void renderE();
 };
 
 #endif // MAINWINDOW_H

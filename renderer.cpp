@@ -1,12 +1,45 @@
 #include "renderer.h"
 
 #include <QVector2D>
+#include <cmath>
 
 Renderer::Renderer()
 {
 }
 
-void Renderer::render(QGraphicsItem *area)
+double Renderer::calcElectricField(QGraphicsItem * area, int &x, int &y) {
+    QVector2D tmpval(0,0);
+
+    foreach (const QGraphicsItem * tmp, area->childItems()) {
+        const PointCharge * p = (PointCharge *) tmp;
+        const QVector2D r = QVector2D(p->pos()) - QVector2D(x, y);
+
+        if (qAbs(r.length()) > EPS)
+            tmpval += (qK * p->charge / r.lengthSquared()) * r.normalized();
+        else
+            return 0;
+    }
+
+    return tmpval.length();
+}
+
+double Renderer::calcPotential(QGraphicsItem * area, int &x, int &y) {
+    double value = 0.0;
+
+    foreach (const QGraphicsItem * tmp, area->childItems()) {
+        const PointCharge * p = (PointCharge *) tmp;
+        const QVector2D r = QVector2D(p->pos()) - QVector2D(x, y);
+
+        if (qAbs(r.length()) > EPS)
+            value += qK * p->charge / r.length();
+        else
+            return 0;
+    }
+
+    return value;
+}
+
+void Renderer::render(QGraphicsItem *area, CalcFunc calc)
 {
     QRectF rect = area->boundingRect();
     img = QImage(rect.width(), rect.height(), QImage::Format_RGB32);
@@ -23,37 +56,19 @@ void Renderer::render(QGraphicsItem *area)
     for (int y=0; y<rect.height(); ++y) {
         for (int x=0; x<rect.width(); ++x) {
             double & value = data[x][y];
-            QVector2D tmpval(0,0);
-
-            foreach (const QGraphicsItem * tmp, area->childItems()) {
-                const PointCharge * p = (PointCharge *) tmp;
-
-                const QVector2D r = QVector2D(p->pos()) - QVector2D(x, y);
-                if (qAbs(r.length()) > EPS)
-                    //value += qK * p->charge / r.length(); - потенциал
-
-                    tmpval += (qK * p->charge / r.lengthSquared()) * r.normalized(); //напряженность
-                else {
-                    value = 0;
-                    break;
-                }
-            }
-            value = tmpval.length(); //напряженность
-
+            value = calc(area, x, y);
             minVal = qMin(minVal, value);
             maxVal = qMax(maxVal, value);
         }
     }
 
     const double diff = maxVal - minVal;
-    QColor color;
-    color.setRgb(0, 24, 241);
     for (int y=0; y<rect.height(); ++y) {
         for (int x=0; x<rect.width(); ++x) {
-            //qDebug("%.4lf", (255*(data[x][y]-minVal)/diff));
-            if ( data[x][y]-minVal < 0) qDebug("%d %d %.5lf %.5lf", x, y, data[x][y], minVal);
-            color.setRed( (int)(256*80000*(data[x][y]-minVal)/diff) % 256 );
-            //color = QColor::fromHsv((int)(180+360*20*(data[x][y]-minVal)/diff) % 360, 200, 200);
+            double tmp = 2*pow((data[x][y]-minVal)/diff, 1.0/8.0);
+            if (tmp!=tmp) tmp=0;
+            const double mapped = ( (int)(1e6*tmp) % 1000000 ) / 1e6;
+            QColor color = QColor::fromHsvF(mapped, 0.7, 0.7);
             img.setPixel(x,y, color.rgb());
         }
     }

@@ -27,7 +27,7 @@
        <enum>QTabWidget::West</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabCharges">
        <attribute name="title">
@@ -152,6 +152,13 @@
            </size>
           </property>
          </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pbRenderE">
+          <property name="text">
+           <string>Построить напряженность</string>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="pbRenderP">
@@ -390,6 +397,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pbRenderE</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>renderE()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>88</x>
+     <y>339</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>3</x>
+     <y>335</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>addCharge()</slot>
@@ -401,5 +424,6 @@
   <slot>renderP()</slot>
   <slot>setChargesVisible(int)</slot>
   <slot>fieldSizeChanged()</slot>
+  <slot>renderE()</slot>
  </slots>
 </ui>

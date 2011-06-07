@@ -100,21 +100,25 @@ void MainWindow::removeCharge()
 void MainWindow::removeAll()
 {
     qDeleteAll(chargeArea->childItems());
+    selectedCharge = NULL;
 }
 
 void MainWindow::changeChargeX(double value)
 {
-    selectedCharge->setX(value);
+    if (selectedCharge)
+        selectedCharge->setX(value);
 }
 
 void MainWindow::changeChargeY(double value)
 {
-    selectedCharge->setY(value);
+    if (selectedCharge)
+        selectedCharge->setY(value);
 }
 
 void MainWindow::changeChargeQ(double value)
 {
-    selectedCharge->charge = value;
+    if (selectedCharge)
+        selectedCharge->charge = value;
 }
 
 void MainWindow::setChargesVisible(int value)

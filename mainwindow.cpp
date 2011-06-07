@@ -10,20 +10,11 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QPixmap background(400, 400);
-    background.fill(Qt::lightGray);
-    QPainter painter;
-    painter.begin(&background);
-    painter.setPen(QPen(Qt::black));
-    painter.setBrush(QBrush(Qt::lightGray));
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.drawRect(0, 0, 400, 400);
-    painter.end();
-
-    chargeArea = scene.addPixmap(background);
-
-    scene.setSceneRect(0,0, 400, 400);
+    chargeArea = new QGraphicsPixmapItem(0, &scene);
     ui->graphicsView->setScene(&scene);
+
+    ui->sbFieldWidth->setValue(600);
+    ui->sbFieldHeight->setValue(600);
 
     connect(&scene, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
 }
@@ -43,6 +34,31 @@ void MainWindow::changeEvent(QEvent *e)
     default:
         break;
     }
+}
+
+QPixmap MainWindow::defaultBackground(int w, int h)
+{
+    QPixmap background(w, h);
+    background.fill(Qt::lightGray);
+    QPainter painter;
+    painter.begin(&background);
+    painter.setPen(QPen(Qt::black));
+    painter.setBrush(QBrush(Qt::lightGray));
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.drawRect(0, 0, w, h);
+    painter.end();
+    return background;
+}
+
+void MainWindow::fieldSizeChanged()
+{
+    removeAll();
+
+    const int w = ui->sbFieldWidth->value();
+    const int h = ui->sbFieldHeight->value();
+
+    chargeArea->setPixmap(defaultBackground(w,h));
+    scene.setSceneRect(0,0, w, h);    
 }
 
 void MainWindow::selectionChanged()

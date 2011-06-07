@@ -17,6 +17,7 @@ public:
     ~MainWindow();
 
 protected:
+    QPixmap defaultBackground(int w, int h);
     void changeEvent(QEvent *e);
 
 private:
@@ -37,6 +38,7 @@ public slots:
     void changeChargeY(double value);
     void changeChargeQ(double value);
     void setChargesVisible(int value);
+    void fieldSizeChanged();
     void renderP();
 };
 
